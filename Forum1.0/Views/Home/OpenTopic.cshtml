@@ -1,0 +1,45 @@
+﻿@using Microsoft.AspNet.Identity;
+@model Forum1._0.Models.TopicDetailsViewModel
+@{
+    ViewBag.Title = "Read";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<div>
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.TopicName)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.TopicName)
+        </dd>
+    </dl>
+</div>
+<p>
+    @if (User.Identity.GetUserId<string>().Equals(Model.UserId))
+    {
+        @Html.ActionLink("Edit Topic", "Edit", new { topicId = Model.TopicId}, new { @class = "btn btn-primary"})
+    }
+    @Html.ActionLink("Add Post", "NewPost", new { topicId = Model.TopicId }, new { @class = "btn btn-primary" })
+    @Html.ActionLink("Back to List", "Index", null, new { @class = "btn btn-primary" })
+
+    <table class="table">
+        <thead>
+        <tr>
+            <th scope="col">Post</th>
+            <th scope="col">Author</th>
+            <th scope="col">Date</th>
+        </tr>
+        </thead>
+        <tbody>
+        @foreach (var p in Model.Posts)
+        {
+            <tr>
+                <td>@Html.ActionLink(p.PostTitle, "ReadPost",  new {id = p.PostId})</td>
+                <td>@p.PostAuthor</td>
+                <td>@p.PostCreatedDate</td>
+            </tr>
+        }
+        </tbody>
+    </table>
+</p>

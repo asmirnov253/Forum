@@ -1,0 +1,30 @@
+﻿@model IEnumerable<DataAccessLayer.DataModels.Topic>
+@{
+    ViewBag.Title = "Forum";
+}
+
+<div style="margin-top:10px;">
+    @if (User.Identity.IsAuthenticated) {
+        @Html.ActionLink("Create Topic", "NewTopic", "Home", new { @class = "btn btn-primary", role = "button" })
+    }
+    <h3>Topics List</h3>
+    <table class="table">
+        <thead>
+            <tr>
+                <th scope="col">Topic</th>
+                <th scope="col">Author</th>
+                <th scope="col">Date</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var t in Model)
+            {
+                <tr>
+                    <td>@Html.ActionLink(t.TopicName, "OpenTopic", new { id = t.Id})</td>
+                    <td>@t.User.Email</td>
+                    <td>@t.TopicDateTime</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

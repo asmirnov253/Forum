@@ -1,0 +1,29 @@
+﻿@model Forum1._0.Models.TopicViewModel
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container">
+    <div class="row">
+        <div class="col">
+            <h3>New Topic</h3>
+            @using (Html.BeginForm("NewTopic", "Home", FormMethod.Post))
+            {
+                <div class="form-group row">
+                    <div class="col-2">
+                        <label for="TopicName">Topic Name</label>
+                        <input type="text" class="form-control" id="TopicName" name="TopicName" />
+                        @Html.ValidationMessageFor(m => m.TopicName)
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label for="TopicDescription">Topic Description</label>
+                    <textarea class="form-control" id="TopicDescription" rows="3" name="TopicDescription"></textarea>
+                    @Html.ValidationMessageFor(m => m.TopicDescription)
+                </div>
+                <button type="submit" class="btn btn-primary">Create</button>
+                @Html.ActionLink("Cancel", "Index", null, new {@class="btn btn-default"})
+            }
+        </div>
+    </div>
+</div>

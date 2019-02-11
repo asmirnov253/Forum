@@ -1,0 +1,42 @@
+﻿@using Microsoft.AspNet.Identity
+@model Forum1._0.Models.PostDetailsViewModel
+
+@{
+    ViewBag.Title = "ReadPost";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>@Model.PostTitle</h2>
+
+<div>
+    <hr />
+    <dl class="dl-horizontal">
+        <dd>
+            @Html.DisplayFor(model => model.PostText)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.PostAuthor)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.PostAuthor)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.PostCreatedDate)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.PostCreatedDate)
+        </dd>
+
+    </dl>
+</div>
+<p>
+@if (User.Identity.GetUserId<string>().Equals(Model.UserId))
+{
+    @Html.ActionLink("Edit Post", "EditPost", new {id = Model.PostId}) 
+}
+    @Html.ActionLink("Back to List", "Index", null, new { @class= "btn btn-primary" })
+</p>
