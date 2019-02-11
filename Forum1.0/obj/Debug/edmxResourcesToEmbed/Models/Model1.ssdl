@@ -1,0 +1,220 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="Forum_DBModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+  <EntityType Name="__MigrationHistory">
+    <Key>
+      <PropertyRef Name="MigrationId" />
+      <PropertyRef Name="ContextKey" />
+    </Key>
+    <Property Name="MigrationId" Type="nvarchar" MaxLength="150" Nullable="false" />
+    <Property Name="ContextKey" Type="nvarchar" MaxLength="300" Nullable="false" />
+    <Property Name="Model" Type="varbinary(max)" Nullable="false" />
+    <Property Name="ProductVersion" Type="nvarchar" MaxLength="32" Nullable="false" />
+  </EntityType>
+  <EntityType Name="FORUM_POST">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Title" Type="nvarchar(max)" />
+    <Property Name="Text" Type="nvarchar(max)" />
+    <Property Name="PostedDate" Type="datetime" Nullable="false" />
+    <Property Name="UserId" Type="nvarchar" MaxLength="128" />
+    <Property Name="TopicId" Type="int" Nullable="false" />
+  </EntityType>
+  <EntityType Name="FORUM_TOPIC">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="TopicName" Type="nvarchar(max)" />
+    <Property Name="TopicDescription" Type="nvarchar(max)" />
+    <Property Name="TopicDateTime" Type="datetime" Nullable="false" />
+    <Property Name="UserId" Type="nvarchar" MaxLength="128" />
+  </EntityType>
+  <EntityType Name="ROLE">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="nvarchar" MaxLength="128" Nullable="false" />
+    <Property Name="Name" Type="nvarchar" MaxLength="256" Nullable="false" />
+  </EntityType>
+  <EntityType Name="USER_CLAIM">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="UserId" Type="nvarchar" MaxLength="128" Nullable="false" />
+    <Property Name="ClaimType" Type="nvarchar(max)" />
+    <Property Name="ClaimValue" Type="nvarchar(max)" />
+  </EntityType>
+  <EntityType Name="USER_INFO">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="nvarchar" MaxLength="128" Nullable="false" />
+    <Property Name="Email" Type="nvarchar" MaxLength="256" />
+    <Property Name="EmailConfirmed" Type="bit" Nullable="false" />
+    <Property Name="PasswordHash" Type="nvarchar(max)" />
+    <Property Name="SecurityStamp" Type="nvarchar(max)" />
+    <Property Name="PhoneNumber" Type="nvarchar(max)" />
+    <Property Name="PhoneNumberConfirmed" Type="bit" Nullable="false" />
+    <Property Name="TwoFactorEnabled" Type="bit" Nullable="false" />
+    <Property Name="LockoutEndDateUtc" Type="datetime" />
+    <Property Name="LockoutEnabled" Type="bit" Nullable="false" />
+    <Property Name="AccessFailedCount" Type="int" Nullable="false" />
+    <Property Name="UserName" Type="nvarchar" MaxLength="256" Nullable="false" />
+    <Property Name="FirstName" Type="nvarchar(max)" />
+    <Property Name="LastName" Type="nvarchar(max)" />
+    <Property Name="Discriminator" Type="nvarchar" MaxLength="128" Nullable="false" />
+  </EntityType>
+  <EntityType Name="USER_LOGIN">
+    <Key>
+      <PropertyRef Name="LoginProvider" />
+      <PropertyRef Name="ProviderKey" />
+      <PropertyRef Name="UserId" />
+    </Key>
+    <Property Name="LoginProvider" Type="nvarchar" MaxLength="128" Nullable="false" />
+    <Property Name="ProviderKey" Type="nvarchar" MaxLength="128" Nullable="false" />
+    <Property Name="UserId" Type="nvarchar" MaxLength="128" Nullable="false" />
+  </EntityType>
+  <EntityType Name="USER_ROLE">
+    <Key>
+      <PropertyRef Name="UserId" />
+      <PropertyRef Name="RoleId" />
+    </Key>
+    <Property Name="UserId" Type="nvarchar" MaxLength="128" Nullable="false" />
+    <Property Name="RoleId" Type="nvarchar" MaxLength="128" Nullable="false" />
+  </EntityType>
+  <Association Name="FK_dbo_FORUM_POST_dbo_FORUM_TOPIC_TopicId">
+    <End Role="FORUM_TOPIC" Type="Self.FORUM_TOPIC" Multiplicity="1">
+      <OnDelete Action="Cascade" />
+    </End>
+    <End Role="FORUM_POST" Type="Self.FORUM_POST" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="FORUM_TOPIC">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="FORUM_POST">
+        <PropertyRef Name="TopicId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_dbo_FORUM_POST_dbo_USER_INFO_UserId">
+    <End Role="USER_INFO" Type="Self.USER_INFO" Multiplicity="0..1" />
+    <End Role="FORUM_POST" Type="Self.FORUM_POST" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="USER_INFO">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="FORUM_POST">
+        <PropertyRef Name="UserId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_dbo_FORUM_TOPIC_dbo_USER_INFO_UserId">
+    <End Role="USER_INFO" Type="Self.USER_INFO" Multiplicity="0..1" />
+    <End Role="FORUM_TOPIC" Type="Self.FORUM_TOPIC" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="USER_INFO">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="FORUM_TOPIC">
+        <PropertyRef Name="UserId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_dbo_USER_CLAIM_dbo_USER_INFO_UserId">
+    <End Role="USER_INFO" Type="Self.USER_INFO" Multiplicity="1">
+      <OnDelete Action="Cascade" />
+    </End>
+    <End Role="USER_CLAIM" Type="Self.USER_CLAIM" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="USER_INFO">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="USER_CLAIM">
+        <PropertyRef Name="UserId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_dbo_USER_LOGIN_dbo_USER_INFO_UserId">
+    <End Role="USER_INFO" Type="Self.USER_INFO" Multiplicity="1">
+      <OnDelete Action="Cascade" />
+    </End>
+    <End Role="USER_LOGIN" Type="Self.USER_LOGIN" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="USER_INFO">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="USER_LOGIN">
+        <PropertyRef Name="UserId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_dbo_USER_ROLE_dbo_ROLE_RoleId">
+    <End Role="ROLE" Type="Self.ROLE" Multiplicity="1">
+      <OnDelete Action="Cascade" />
+    </End>
+    <End Role="USER_ROLE" Type="Self.USER_ROLE" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="ROLE">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="USER_ROLE">
+        <PropertyRef Name="RoleId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_dbo_USER_ROLE_dbo_USER_INFO_UserId">
+    <End Role="USER_INFO" Type="Self.USER_INFO" Multiplicity="1">
+      <OnDelete Action="Cascade" />
+    </End>
+    <End Role="USER_ROLE" Type="Self.USER_ROLE" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="USER_INFO">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="USER_ROLE">
+        <PropertyRef Name="UserId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <EntityContainer Name="Forum_DBModelStoreContainer">
+    <EntitySet Name="__MigrationHistory" EntityType="Self.__MigrationHistory" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="FORUM_POST" EntityType="Self.FORUM_POST" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="FORUM_TOPIC" EntityType="Self.FORUM_TOPIC" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="ROLE" EntityType="Self.ROLE" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="USER_CLAIM" EntityType="Self.USER_CLAIM" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="USER_INFO" EntityType="Self.USER_INFO" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="USER_LOGIN" EntityType="Self.USER_LOGIN" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="USER_ROLE" EntityType="Self.USER_ROLE" Schema="dbo" store:Type="Tables" />
+    <AssociationSet Name="FK_dbo_FORUM_POST_dbo_FORUM_TOPIC_TopicId" Association="Self.FK_dbo_FORUM_POST_dbo_FORUM_TOPIC_TopicId">
+      <End Role="FORUM_TOPIC" EntitySet="FORUM_TOPIC" />
+      <End Role="FORUM_POST" EntitySet="FORUM_POST" />
+    </AssociationSet>
+    <AssociationSet Name="FK_dbo_FORUM_POST_dbo_USER_INFO_UserId" Association="Self.FK_dbo_FORUM_POST_dbo_USER_INFO_UserId">
+      <End Role="USER_INFO" EntitySet="USER_INFO" />
+      <End Role="FORUM_POST" EntitySet="FORUM_POST" />
+    </AssociationSet>
+    <AssociationSet Name="FK_dbo_FORUM_TOPIC_dbo_USER_INFO_UserId" Association="Self.FK_dbo_FORUM_TOPIC_dbo_USER_INFO_UserId">
+      <End Role="USER_INFO" EntitySet="USER_INFO" />
+      <End Role="FORUM_TOPIC" EntitySet="FORUM_TOPIC" />
+    </AssociationSet>
+    <AssociationSet Name="FK_dbo_USER_CLAIM_dbo_USER_INFO_UserId" Association="Self.FK_dbo_USER_CLAIM_dbo_USER_INFO_UserId">
+      <End Role="USER_INFO" EntitySet="USER_INFO" />
+      <End Role="USER_CLAIM" EntitySet="USER_CLAIM" />
+    </AssociationSet>
+    <AssociationSet Name="FK_dbo_USER_LOGIN_dbo_USER_INFO_UserId" Association="Self.FK_dbo_USER_LOGIN_dbo_USER_INFO_UserId">
+      <End Role="USER_INFO" EntitySet="USER_INFO" />
+      <End Role="USER_LOGIN" EntitySet="USER_LOGIN" />
+    </AssociationSet>
+    <AssociationSet Name="FK_dbo_USER_ROLE_dbo_ROLE_RoleId" Association="Self.FK_dbo_USER_ROLE_dbo_ROLE_RoleId">
+      <End Role="ROLE" EntitySet="ROLE" />
+      <End Role="USER_ROLE" EntitySet="USER_ROLE" />
+    </AssociationSet>
+    <AssociationSet Name="FK_dbo_USER_ROLE_dbo_USER_INFO_UserId" Association="Self.FK_dbo_USER_ROLE_dbo_USER_INFO_UserId">
+      <End Role="USER_INFO" EntitySet="USER_INFO" />
+      <End Role="USER_ROLE" EntitySet="USER_ROLE" />
+    </AssociationSet>
+  </EntityContainer>
+</Schema>

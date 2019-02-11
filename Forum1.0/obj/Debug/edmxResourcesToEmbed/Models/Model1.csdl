@@ -1,0 +1,195 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="Forum_DBModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+  <EntityType Name="C__MigrationHistory">
+    <Key>
+      <PropertyRef Name="MigrationId" />
+      <PropertyRef Name="ContextKey" />
+    </Key>
+    <Property Name="MigrationId" Type="String" MaxLength="150" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="ContextKey" Type="String" MaxLength="300" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="Model" Type="Binary" MaxLength="Max" FixedLength="false" Nullable="false" />
+    <Property Name="ProductVersion" Type="String" MaxLength="32" FixedLength="false" Unicode="true" Nullable="false" />
+  </EntityType>
+  <EntityType Name="FORUM_POST">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Title" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="Text" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="PostedDate" Type="DateTime" Nullable="false" Precision="3" />
+    <Property Name="UserId" Type="String" MaxLength="128" FixedLength="false" Unicode="true" />
+    <Property Name="TopicId" Type="Int32" Nullable="false" />
+    <NavigationProperty Name="FORUM_TOPIC" Relationship="Self.FK_dbo_FORUM_POST_dbo_FORUM_TOPIC_TopicId" FromRole="FORUM_POST" ToRole="FORUM_TOPIC" />
+    <NavigationProperty Name="USER_INFO" Relationship="Self.FK_dbo_FORUM_POST_dbo_USER_INFO_UserId" FromRole="FORUM_POST" ToRole="USER_INFO" />
+  </EntityType>
+  <EntityType Name="FORUM_TOPIC">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="TopicName" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="TopicDescription" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="TopicDateTime" Type="DateTime" Nullable="false" Precision="3" />
+    <Property Name="UserId" Type="String" MaxLength="128" FixedLength="false" Unicode="true" />
+    <NavigationProperty Name="FORUM_POST" Relationship="Self.FK_dbo_FORUM_POST_dbo_FORUM_TOPIC_TopicId" FromRole="FORUM_TOPIC" ToRole="FORUM_POST" />
+    <NavigationProperty Name="USER_INFO" Relationship="Self.FK_dbo_FORUM_TOPIC_dbo_USER_INFO_UserId" FromRole="FORUM_TOPIC" ToRole="USER_INFO" />
+  </EntityType>
+  <EntityType Name="ROLE">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="String" MaxLength="128" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="Name" Type="String" MaxLength="256" FixedLength="false" Unicode="true" Nullable="false" />
+    <NavigationProperty Name="USER_INFO" Relationship="Self.USER_ROLE" FromRole="ROLE" ToRole="USER_INFO" />
+  </EntityType>
+  <EntityType Name="USER_CLAIM">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="UserId" Type="String" MaxLength="128" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="ClaimType" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="ClaimValue" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <NavigationProperty Name="USER_INFO" Relationship="Self.FK_dbo_USER_CLAIM_dbo_USER_INFO_UserId" FromRole="USER_CLAIM" ToRole="USER_INFO" />
+  </EntityType>
+  <EntityType Name="USER_INFO">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="String" MaxLength="128" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="Email" Type="String" MaxLength="256" FixedLength="false" Unicode="true" />
+    <Property Name="EmailConfirmed" Type="Boolean" Nullable="false" />
+    <Property Name="PasswordHash" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="SecurityStamp" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="PhoneNumber" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="PhoneNumberConfirmed" Type="Boolean" Nullable="false" />
+    <Property Name="TwoFactorEnabled" Type="Boolean" Nullable="false" />
+    <Property Name="LockoutEndDateUtc" Type="DateTime" Precision="3" />
+    <Property Name="LockoutEnabled" Type="Boolean" Nullable="false" />
+    <Property Name="AccessFailedCount" Type="Int32" Nullable="false" />
+    <Property Name="UserName" Type="String" MaxLength="256" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="FirstName" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="LastName" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="Discriminator" Type="String" MaxLength="128" FixedLength="false" Unicode="true" Nullable="false" />
+    <NavigationProperty Name="FORUM_POST" Relationship="Self.FK_dbo_FORUM_POST_dbo_USER_INFO_UserId" FromRole="USER_INFO" ToRole="FORUM_POST" />
+    <NavigationProperty Name="FORUM_TOPIC" Relationship="Self.FK_dbo_FORUM_TOPIC_dbo_USER_INFO_UserId" FromRole="USER_INFO" ToRole="FORUM_TOPIC" />
+    <NavigationProperty Name="USER_CLAIM" Relationship="Self.FK_dbo_USER_CLAIM_dbo_USER_INFO_UserId" FromRole="USER_INFO" ToRole="USER_CLAIM" />
+    <NavigationProperty Name="USER_LOGIN" Relationship="Self.FK_dbo_USER_LOGIN_dbo_USER_INFO_UserId" FromRole="USER_INFO" ToRole="USER_LOGIN" />
+    <NavigationProperty Name="ROLE" Relationship="Self.USER_ROLE" FromRole="USER_INFO" ToRole="ROLE" />
+  </EntityType>
+  <EntityType Name="USER_LOGIN">
+    <Key>
+      <PropertyRef Name="LoginProvider" />
+      <PropertyRef Name="ProviderKey" />
+      <PropertyRef Name="UserId" />
+    </Key>
+    <Property Name="LoginProvider" Type="String" MaxLength="128" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="ProviderKey" Type="String" MaxLength="128" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="UserId" Type="String" MaxLength="128" FixedLength="false" Unicode="true" Nullable="false" />
+    <NavigationProperty Name="USER_INFO" Relationship="Self.FK_dbo_USER_LOGIN_dbo_USER_INFO_UserId" FromRole="USER_LOGIN" ToRole="USER_INFO" />
+  </EntityType>
+  <Association Name="FK_dbo_FORUM_POST_dbo_FORUM_TOPIC_TopicId">
+    <End Role="FORUM_TOPIC" Type="Self.FORUM_TOPIC" Multiplicity="1">
+      <OnDelete Action="Cascade" />
+    </End>
+    <End Role="FORUM_POST" Type="Self.FORUM_POST" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="FORUM_TOPIC">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="FORUM_POST">
+        <PropertyRef Name="TopicId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_dbo_FORUM_POST_dbo_USER_INFO_UserId">
+    <End Role="USER_INFO" Type="Self.USER_INFO" Multiplicity="0..1" />
+    <End Role="FORUM_POST" Type="Self.FORUM_POST" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="USER_INFO">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="FORUM_POST">
+        <PropertyRef Name="UserId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_dbo_FORUM_TOPIC_dbo_USER_INFO_UserId">
+    <End Role="USER_INFO" Type="Self.USER_INFO" Multiplicity="0..1" />
+    <End Role="FORUM_TOPIC" Type="Self.FORUM_TOPIC" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="USER_INFO">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="FORUM_TOPIC">
+        <PropertyRef Name="UserId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_dbo_USER_CLAIM_dbo_USER_INFO_UserId">
+    <End Role="USER_INFO" Type="Self.USER_INFO" Multiplicity="1">
+      <OnDelete Action="Cascade" />
+    </End>
+    <End Role="USER_CLAIM" Type="Self.USER_CLAIM" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="USER_INFO">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="USER_CLAIM">
+        <PropertyRef Name="UserId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_dbo_USER_LOGIN_dbo_USER_INFO_UserId">
+    <End Role="USER_INFO" Type="Self.USER_INFO" Multiplicity="1">
+      <OnDelete Action="Cascade" />
+    </End>
+    <End Role="USER_LOGIN" Type="Self.USER_LOGIN" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="USER_INFO">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="USER_LOGIN">
+        <PropertyRef Name="UserId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="USER_ROLE">
+    <End Role="ROLE" Type="Self.ROLE" Multiplicity="*" />
+    <End Role="USER_INFO" Type="Self.USER_INFO" Multiplicity="*" />
+  </Association>
+  <EntityContainer Name="Forum_DBEntities" annotation:LazyLoadingEnabled="true">
+    <EntitySet Name="C__MigrationHistory" EntityType="Self.C__MigrationHistory" />
+    <EntitySet Name="FORUM_POST" EntityType="Self.FORUM_POST" />
+    <EntitySet Name="FORUM_TOPIC" EntityType="Self.FORUM_TOPIC" />
+    <EntitySet Name="ROLE" EntityType="Self.ROLE" />
+    <EntitySet Name="USER_CLAIM" EntityType="Self.USER_CLAIM" />
+    <EntitySet Name="USER_INFO" EntityType="Self.USER_INFO" />
+    <EntitySet Name="USER_LOGIN" EntityType="Self.USER_LOGIN" />
+    <AssociationSet Name="FK_dbo_FORUM_POST_dbo_FORUM_TOPIC_TopicId" Association="Self.FK_dbo_FORUM_POST_dbo_FORUM_TOPIC_TopicId">
+      <End Role="FORUM_TOPIC" EntitySet="FORUM_TOPIC" />
+      <End Role="FORUM_POST" EntitySet="FORUM_POST" />
+    </AssociationSet>
+    <AssociationSet Name="FK_dbo_FORUM_POST_dbo_USER_INFO_UserId" Association="Self.FK_dbo_FORUM_POST_dbo_USER_INFO_UserId">
+      <End Role="USER_INFO" EntitySet="USER_INFO" />
+      <End Role="FORUM_POST" EntitySet="FORUM_POST" />
+    </AssociationSet>
+    <AssociationSet Name="FK_dbo_FORUM_TOPIC_dbo_USER_INFO_UserId" Association="Self.FK_dbo_FORUM_TOPIC_dbo_USER_INFO_UserId">
+      <End Role="USER_INFO" EntitySet="USER_INFO" />
+      <End Role="FORUM_TOPIC" EntitySet="FORUM_TOPIC" />
+    </AssociationSet>
+    <AssociationSet Name="FK_dbo_USER_CLAIM_dbo_USER_INFO_UserId" Association="Self.FK_dbo_USER_CLAIM_dbo_USER_INFO_UserId">
+      <End Role="USER_INFO" EntitySet="USER_INFO" />
+      <End Role="USER_CLAIM" EntitySet="USER_CLAIM" />
+    </AssociationSet>
+    <AssociationSet Name="FK_dbo_USER_LOGIN_dbo_USER_INFO_UserId" Association="Self.FK_dbo_USER_LOGIN_dbo_USER_INFO_UserId">
+      <End Role="USER_INFO" EntitySet="USER_INFO" />
+      <End Role="USER_LOGIN" EntitySet="USER_LOGIN" />
+    </AssociationSet>
+    <AssociationSet Name="USER_ROLE" Association="Self.USER_ROLE">
+      <End Role="ROLE" EntitySet="ROLE" />
+      <End Role="USER_INFO" EntitySet="USER_INFO" />
+    </AssociationSet>
+  </EntityContainer>
+</Schema>
